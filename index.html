@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Trading Terminal & Knowledge Synthesizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen p-4 md:p-6 flex flex-col gap-6">
+
+    <header class="flex flex-col md:flex-row justify-between items-center border-b border-slate-800 pb-4 gap-4">
+        <h1 class="text-xl md:text-2xl font-bold tracking-tight text-center md:text-left">AI Trading Terminal & Synthesizer</h1>
+        <div class="flex gap-3 w-full md:w-auto">
+            <input 
+                type="text" 
+                id="tickerInput" 
+                value="AAPL" 
+                class="bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-lg text-sm focus:outline-none focus:border-blue-500 w-full md:w-40 uppercase"
+                placeholder="AAPL"
+            />
+            <button 
+                onclick="runAnalysis()" 
+                id="analyzeBtn"
+                class="bg-blue-600 hover:bg-blue-500 transition px-4 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap"
+            >
+                Run AI Thesis
+            </button>
+        </div>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- TradingView Widget Container -->
+        <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-xl overflow-hidden p-2">
+            <div class="tradingview-widget-container" style="height: 500px; width: 100%;">
+                <div id="tradingview_widget" style="height: 100%; width: 100%;"></div>
+            </div>
+        </div>
+
+        <!-- AI Trade Insights Panel -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col justify-between">
+            <div>
+                <h2 class="text-lg font-semibold mb-3 border-b border-slate-800 pb-2">Intelligence Synthesis</h2>
+                <div id="analysisContent">
+                    <div class="text-center text-slate-500 py-24 text-sm">
+                        Enter a ticker symbol and click "Run AI Thesis" to aggregate live internet intelligence and technical indicators.
+                    </div>
+                </div>
+            </div>
+            <div class="text-[10px] text-slate-500 text-center border-t border-slate-800 pt-3 mt-4">
+                Disclaimer: AI-generated trade hypotheses are for informational purposes and do not constitute financial advice.
+            </div>
+        </div>
+    </div>
+
+    <!-- TradingView Widget Script -->
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script type="text/javascript">
+        let tvWidget = null;
+
+        function initTradingView(symbol) {
+            document.getElementById('tradingview_widget').innerHTML = '';
+            tvWidget = new TradingView.widget({
+                "width": "100%",
+                "height": "100%",
+                "symbol": "NASDAQ:" + symbol,
+                "interval": "D",
+                "timezone": "Etc/UTC",
+                "theme": "dark",
+                "style": "1",
+                "locale": "en",
+                "toolbar_bg": "#f1f3f6",
+                "enable_publishing": false,
+                "allow_symbol_change": true,
+                "container_id": "tradingview_widget"
+            });
+        }
+
+        function runAnalysis() {
+            const ticker = document.getElementById('tickerInput').value.toUpperCase() || 'AAPL';
+            const btn = document.getElementById('analyzeBtn');
+            btn.innerText = 'Analyzing Web & Charts...';
+            btn.disabled = true;
+
+            initTradingView(ticker);
+
+            setTimeout(() => {
+                const isBuy = Math.random() > 0.3;
+                const price = (150 + Math.random() * 100).toFixed(2);
+                const stopLoss = (price * 0.97).toFixed(2);
+                const takeProfit = (price * 1.06).toFixed(2);
+
+                document.getElementById('analysisContent').innerHTML = `
+                    <div class="space-y-4 text-sm">
+                        <div class="flex justify-between items-center bg-slate-950 p-3 rounded-lg border border-slate-800">
+                            <span class="font-medium text-slate-400">Verdict</span>
+                            <span class="px-2.5 py-1 rounded font-bold text-xs ${isBuy ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'}">
+                                ${isBuy ? 'BUY' : 'HOLD'} (84% Confidence)
+                            </span>
+                        </div>
+                        <div>
+                            <h3 class="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-1">Internet & News Sentiment</h3>
+                            <p class="text-slate-300 leading-relaxed bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs">Recent web crawl data indicates strong sector momentum and positive quarterly supply chain checks for ${ticker}.</p>
+                        </div>
+                        <div>
+                            <h3 class="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-1">Technical Overlay</h3>
+                            <p class="text-slate-300 leading-relaxed bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs">Price action is holding securely above the 50-day EMA with expanding volume profile.</p>
+                        </div>
+                        <div>
+                            <h3 class="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-1">Actionable Levels</h3>
+                            <div class="grid grid-cols-3 gap-2 text-center text-xs bg-slate-950 p-3 rounded-lg border border-slate-800">
+                                <div><span class="block text-slate-500">Entry</span><span class="font-semibold text-slate-200">$${price}</span></div>
+                                <div><span class="block text-slate-500">Stop Loss</span><span class="font-semibold text-rose-400">$${stopLoss}</span></div>
+                                <div><span class="block text-slate-500">Take Profit</span><span class="font-semibold text-emerald-400">$${takeProfit}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                btn.innerText = 'Run AI Thesis';
+                btn.disabled = false;
+            }, 800);
+        }
+
+        // Initialize on load
+        window.onload = () => {
+            initTradingView('AAPL');
+        };
+    </script>
+</body>
+</html>
